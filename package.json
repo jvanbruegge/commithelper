@@ -12,17 +12,22 @@
   "main": "build/index.js",
   "scripts": {
     "build": "tsc",
-    "format": "prettier --write ./src"
+    "format": "prettier --write ./src",
+    "commit": "ts-node src/index.ts"
   },
   "prettier": {
     "singleQuote": true,
     "arrowParens": "avoid"
   },
   "devDependencies": {
+    "@types/node": "^14.14.32",
     "prettier": "^2.2.1",
+    "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "commander": "^7.1.0"
+    "commander": "^7.1.0",
+    "fp-ts": "^2.9.5",
+    "io-ts": "^2.2.15"
   }
 }
