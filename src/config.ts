@@ -2,6 +2,7 @@ import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/PathReporter';
 import { fold } from 'fp-ts/Either';
 import { readFileSync } from 'fs';
+import { join } from 'path';
 import { withDefault } from './withDefault';
 
 const skippable = t.keyof({
@@ -33,7 +34,11 @@ export type Config = t.TypeOf<typeof Config>;
 export function parseConfig(path: string | undefined): Config {
     const json = path
         ? JSON.parse(readFileSync(path, { encoding: 'utf-8' }))
-        : {};
+        : JSON.parse(
+              readFileSync(join(process.cwd(), 'package.json'), {
+                  encoding: 'utf-8',
+              })
+          ).commithelper || {};
     const parsed = Config.decode(json);
     const onLeft = (): never => {
         throw new Error(PathReporter.report(parsed).join('\n'));

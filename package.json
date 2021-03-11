@@ -13,11 +13,16 @@
   "scripts": {
     "build": "tsc",
     "format": "prettier --write ./src",
-    "commit": "ts-node src/index.ts"
+    "commit": "ts-node src/index.ts prompt"
   },
   "prettier": {
     "singleQuote": true,
     "arrowParens": "avoid"
+  },
+  "commithelper": {
+    "scopeOverrides": {
+        "chore": ["tools", "deps", "docs", "examples"]
+    }
   },
   "devDependencies": {
     "@types/inquirer": "^7.3.1",
