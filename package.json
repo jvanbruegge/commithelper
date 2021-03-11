@@ -9,7 +9,9 @@
   ],
   "author": "Jan van Brügge",
   "license": "MIT",
-  "main": "build/index.js",
+  "bin": {
+    "commithelper": "build/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "format": "prettier --write ./src",
