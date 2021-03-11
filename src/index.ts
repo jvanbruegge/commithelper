@@ -1,5 +1,5 @@
-import { Command } from 'commander';
-import { readFileSync } from 'fs';
+import { Command, Option } from 'commander';
+import { readFileSync, promises } from 'fs';
 import { resolve } from 'path';
 
 import { parseConfig } from './config';
@@ -14,35 +14,59 @@ const pkgJson = JSON.parse(
     })
 );
 
-program
-    .version(pkgJson.version, '-v, --version', 'output the current version')
-    .option('-c, --config <file>', 'the path to the commithelper config file');
+process.exitCode = 1;
 
-program
-    .command('check <commit_file>')
+const configOption = new Option(
+    '-c, --config <file>',
+    'the path to the commithelper config file'
+);
+const fileOption = new Option(
+    '-f, --file <file>',
+    'the path to the file containing the commit message'
+);
+
+const checkCommand = new Command('check')
     .description('lint a commit message according to the configuration')
+    .addOption(configOption)
+    .addOption(fileOption)
     .action(file => {
         const msg = readFileSync(file, { encoding: 'utf-8' });
         lintMessage(msg);
     });
 
-program
-    .command('prompt')
+const promptCommand = new Command('prompt')
     .description('Create a commit message interactively')
+    .addOption(configOption)
+    .addOption(fileOption)
     .action(runInteractive);
+
+program
+    .version(pkgJson.version, '-v, --version', 'output the current version')
+    .addCommand(checkCommand)
+    .addCommand(promptCommand);
 
 function lintMessage(commitMsg: string): void {
     console.log(commitMsg);
 }
 
 function runInteractive(): void {
-    const options = program.opts();
+    const options = promptCommand.opts();
     const config = parseConfig(options.config);
 
-    createCommitMessage(config).then(msg => {
-        const rendered = renderMessage(msg, config);
-        console.log(rendered);
-    });
+    createCommitMessage(config)
+        .then(msg => {
+            const rendered = renderMessage(msg, config);
+            if (options.file) {
+                return promises.writeFile(options.file, rendered, {
+                    encoding: 'utf-8',
+                });
+            } else {
+                console.log(rendered);
+            }
+        })
+        .then(() => {
+            process.exitCode = 0;
+        });
 }
 
 program.parse(process.argv);
