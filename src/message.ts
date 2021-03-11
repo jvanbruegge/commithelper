@@ -1,14 +1,61 @@
-import { Config, ticketSeperatorRegex } from './config';
+import { Config, ticketSeperatorRegex, escapeRegex } from './config';
 
 export interface Message {
     type: string;
     scope?: string;
-    customScope?: string;
     subject: string;
     body?: string;
-    isBreaking: boolean;
     breaking?: string;
     issuesClosed?: string;
+}
+
+export function parseMessage(msg: string, config: Config): Message {
+    const lines = msg.split('\n').filter(Boolean);
+
+    const subjectLineRegex = new RegExp(
+        `^${escapeRegex(config.typePrefix)}(\\w+)${escapeRegex(
+            config.typeSuffix
+        )}(?:\\(([^()]+)\\))?: (.*)$`
+    );
+
+    const matches = lines[0].match(subjectLineRegex);
+    if (!matches) {
+        throw new Error(
+            `expected subject to either have form '${config.typePrefix}<type>${config.typeSuffix}: <subject>' ` +
+                `or form '${config.typeSuffix}<type>${config.typeSuffix}(<scope>): <subject>'`
+        );
+    }
+
+    const [_, type, scope, subject] = matches;
+
+    let isBody = true;
+    let body = '';
+    let issuesClosed = '';
+    let breaking = '';
+    for (let i = 1; i < lines.length; i++) {
+        if (lines[i].startsWith(config.ticketPrefix)) {
+            issuesClosed += lines[i]
+                .slice(config.ticketPrefix.length, lines[i].length)
+                .split(config.ticketSeperator)
+                .map(s => s.trim())
+                .join(config.ticketSeperator + ' ');
+        } else if (lines[i].startsWith(config.breakingPrefix)) {
+            isBody = false;
+        } else if (isBody) {
+            body += lines[i] + ' ';
+        } else {
+            breaking += lines[i] + ' ';
+        }
+    }
+
+    return {
+        type,
+        scope,
+        subject,
+        body: body.trim(),
+        breaking: breaking.trim(),
+        issuesClosed: issuesClosed.trim(),
+    };
 }
 
 export function renderMessage(msg: Message, config: Config): string {
@@ -27,14 +74,14 @@ export function renderMessage(msg: Message, config: Config): string {
     const issues = msg.issuesClosed
         ? '\n\n' + renderIssuesClosed(msg.issuesClosed, config)
         : '';
-    const breaking = msg.isBreaking
+    const breaking = msg.breaking
         ? (msg.issuesClosed ? '\n' : '\n\n') +
           config.breakingPrefix +
           '\n' +
           renderBody(msg.breaking!, config)
         : '';
 
-    const footer = msg.issuesClosed || msg.isBreaking ? issues + breaking : '';
+    const footer = msg.issuesClosed || msg.breaking ? issues + breaking : '';
 
     return header + body + footer;
 }

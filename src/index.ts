@@ -4,7 +4,7 @@ import { resolve } from 'path';
 
 import { parseConfig } from './config';
 import { createCommitMessage } from './prompt';
-import { renderMessage } from './message';
+import { renderMessage, parseMessage } from './message';
 
 const program = new Command();
 
@@ -29,10 +29,7 @@ const checkCommand = new Command('check')
     .description('lint a commit message according to the configuration')
     .addOption(configOption)
     .addOption(fileOption)
-    .action(file => {
-        const msg = readFileSync(file, { encoding: 'utf-8' });
-        lintMessage(msg);
-    });
+    .action(lintMessage);
 
 const promptCommand = new Command('prompt')
     .description('Create a commit message interactively')
@@ -45,8 +42,14 @@ program
     .addCommand(checkCommand)
     .addCommand(promptCommand);
 
-function lintMessage(commitMsg: string): void {
-    console.log(commitMsg);
+function lintMessage(): void {
+    const options = checkCommand.opts();
+    const config = parseConfig(options.config);
+    const msg = readFileSync(options.file ?? process.stdin.fd, {
+        encoding: 'utf-8',
+    });
+    const parsed = parseMessage(msg, config);
+    console.log(parsed);
 }
 
 function runInteractive(): void {

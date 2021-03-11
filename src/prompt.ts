@@ -22,7 +22,7 @@ export function createCommitMessage(config: Config): Promise<Message> {
         },
         {
             type: 'input',
-            name: 'customScope',
+            name: 'scope',
             message: 'Enter a custom scope:',
             when: answers => answers.scope === 'custom',
         },
@@ -63,11 +63,13 @@ export function createCommitMessage(config: Config): Promise<Message> {
             when: config.skipQuestions.indexOf('body') === -1,
         },
         {
-            type: 'confirm',
-            name: 'isBreaking',
-            message: 'Are there any breaking changes?',
-            default: false,
+            type: 'input',
+            name: 'breaking',
+            message: 'List any BREAKING CHANGES: (press enter to skip)\n',
+            when: config.skipQuestions.indexOf('breaking') === -1,
+            transformer: s => s.trim(),
         },
+
         {
             type: 'list',
             name: 'type',
@@ -76,6 +78,7 @@ export function createCommitMessage(config: Config): Promise<Message> {
             )}, please choose a different type:\n`,
             choices: config.allowBreakingChanges,
             when: answers =>
+                answers.breaking !== '' &&
                 config.allowBreakingChanges.indexOf(answers.type) === -1,
         },
         {
@@ -84,6 +87,7 @@ export function createCommitMessage(config: Config): Promise<Message> {
             message:
                 'A BREAKING CHANGE commit requires a body. Please enter a longer description of the commit itself:\n',
             when: answers =>
+                answers.breaking !== '' &&
                 config.breakingRequiresBody &&
                 (answers.body?.length ?? 0) === 0,
             validate: body =>
@@ -92,19 +96,9 @@ export function createCommitMessage(config: Config): Promise<Message> {
         },
         {
             type: 'input',
-            name: 'breaking',
-            message: 'Describe the breaking changes:\n',
-            when: answers => answers.isBreaking,
-            transformer: s => s.trim(),
-        },
-        {
-            type: 'input',
             name: 'issuesClosed',
             default: '',
-            message:
-                `Add issues that are closed by this commit, seperated by '${config.ticketSeperator}'\n` +
-                `  (e.g. ${config.ticketNumberPrefix}123${config.ticketSeperator} ${config.ticketNumberPrefix}254): ` +
-                `(press enter to skip)\n`,
+            message: `List any ISSUES CLOSED by this comit, seperated by '${config.ticketSeperator}'. E.g. ${config.ticketNumberPrefix}123${config.ticketSeperator} ${config.ticketNumberPrefix}254: (press enter to skip)\n`,
             when: config.skipQuestions.indexOf('issuesClosed') === -1,
             validate: (input: string) => {
                 if (input.trim() === '') return true;

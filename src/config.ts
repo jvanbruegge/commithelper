@@ -7,7 +7,7 @@ import { withDefault } from './withDefault';
 
 const skippable = t.keyof({
     body: null,
-    isBreaking: null,
+    breaking: null,
     issuesClosed: null,
 });
 
@@ -49,7 +49,7 @@ export function parseConfig(path: string | undefined): Config {
 }
 
 export function ticketSeperatorRegex(config: Config): RegExp {
-    return new RegExp(`/${escapeRegex(config.ticketSeperator)}/`, 'g');
+    return new RegExp(`${escapeRegex(config.ticketSeperator)}`, 'g');
 }
 
 export function escapeRegex(str: string): string {
