@@ -98,6 +98,7 @@ export function createCommitMessage(config: Config): Promise<string> {
         {
             type: 'input',
             name: 'issuesClosed',
+            default: '',
             message:
                 `Add issues that are closed by this commit, comma seperated\n` +
                 `  (e.g. ${config.ticketNumberPrefix}123, ${config.ticketNumberPrefix}254): (press enter to skip)\n`,
@@ -110,7 +111,10 @@ export function createCommitMessage(config: Config): Promise<string> {
                     if (!x.startsWith(config.ticketNumberPrefix)) {
                         return `Expected ticket number to start with '${config.ticketNumberPrefix}', but got '${t}'`;
                     }
-                    const num = x.slice(config.ticketPrefix.length);
+                    const num = x.slice(
+                        config.ticketNumberPrefix.length,
+                        x.length
+                    );
                     if (isNaN(parseInt(num))) {
                         return `Expected ticket number to be a number, got '${num}' ('${t}')`;
                     }
