@@ -57,9 +57,18 @@ function runInteractive(): void {
         .then(msg => {
             const rendered = renderMessage(msg, config);
             if (options.file) {
-                return promises.writeFile(options.file, rendered, {
-                    encoding: 'utf-8',
-                });
+                let orig = readFileSync(options.file, { encoding: 'utf-8' })
+                    .split('\n')
+                    .filter(s => s.startsWith('#'))
+                    .join('\n');
+
+                return promises.writeFile(
+                    options.file,
+                    rendered + '\n\n' + orig,
+                    {
+                        encoding: 'utf-8',
+                    }
+                );
             } else {
                 console.log(rendered);
             }
