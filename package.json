@@ -15,7 +15,8 @@
   "scripts": {
     "build": "tsc",
     "format": "prettier --write ./src",
-    "commit": "ts-node src/index.ts prompt"
+    "commit": "ts-node src/index.ts prompt",
+    "prepublishOnly": "npm run build"
   },
   "prettier": {
     "singleQuote": true,

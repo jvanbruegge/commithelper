@@ -28,14 +28,13 @@ export function renderMessage(msg: Message, config: Config): string {
         ? '\n\n' + renderIssuesClosed(msg.issuesClosed, config)
         : '';
     const breaking = msg.isBreaking
-        ? (msg.issuesClosed ? '' : '\n') +
+        ? (msg.issuesClosed ? '\n' : '\n\n') +
           config.breakingPrefix +
           '\n' +
           renderBody(msg.breaking!, config)
         : '';
 
-    const footer =
-        msg.issuesClosed || msg.isBreaking ? `${issues}\n${breaking}` : '';
+    const footer = msg.issuesClosed || msg.isBreaking ? issues + breaking : '';
 
     return header + body + footer;
 }
