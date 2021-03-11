@@ -20,8 +20,10 @@ const Config = t.type({
     scopes: withDefault(t.array(t.string), []),
     scopeOverrides: withDefault(t.record(t.string, t.array(t.string)), {}),
     allowCustomScopes: withDefault(t.boolean, false),
+    bodyWrap: withDefault(t.number, 72),
     ticketPrefix: withDefault(t.string, 'ISSUES CLOSED:'),
     ticketNumberPrefix: withDefault(t.string, '#'),
+    ticketSeperator: withDefault(t.string, ','),
     breakingPrefix: withDefault(t.string, 'BREAKING CHANGE:'),
     breakingRequiresBody: withDefault(t.boolean, false),
     allowBreakingChanges: withDefault(t.array(t.string), ['feat', 'fix']),
@@ -44,4 +46,13 @@ export function parseConfig(path: string | undefined): Config {
         throw new Error(PathReporter.report(parsed).join('\n'));
     };
     return fold(onLeft, (x: Config) => x)(parsed);
+}
+
+export function ticketSeperatorRegex(config: Config): RegExp {
+    return new RegExp(`/${escapeRegex(config.ticketSeperator)}/`, 'g');
+}
+
+export function escapeRegex(str: string): string {
+    // From [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping)
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

@@ -2,9 +2,10 @@ import * as inquirer from 'inquirer';
 import { QuestionCollection, Separator, Answers } from 'inquirer';
 import { green, red } from 'chalk';
 
-import { Config } from './config';
+import { Config, ticketSeperatorRegex } from './config';
+import { Message } from './message';
 
-export function createCommitMessage(config: Config): Promise<string> {
+export function createCommitMessage(config: Config): Promise<Message> {
     const questions: QuestionCollection = [
         {
             type: 'list',
@@ -94,18 +95,22 @@ export function createCommitMessage(config: Config): Promise<string> {
             name: 'breaking',
             message: 'Describe the breaking changes:\n',
             when: answers => answers.isBreaking,
+            transformer: s => s.trim(),
         },
         {
             type: 'input',
             name: 'issuesClosed',
             default: '',
             message:
-                `Add issues that are closed by this commit, comma seperated\n` +
-                `  (e.g. ${config.ticketNumberPrefix}123, ${config.ticketNumberPrefix}254): (press enter to skip)\n`,
+                `Add issues that are closed by this commit, seperated by '${config.ticketSeperator}'\n` +
+                `  (e.g. ${config.ticketNumberPrefix}123${config.ticketSeperator} ${config.ticketNumberPrefix}254): ` +
+                `(press enter to skip)\n`,
             when: config.skipQuestions.indexOf('issuesClosed') === -1,
             validate: (input: string) => {
                 if (input.trim() === '') return true;
-                const tickets = input.trim().split(/,/g);
+                const tickets = input
+                    .trim()
+                    .split(ticketSeperatorRegex(config));
                 for (const t of tickets) {
                     const x = t.trim();
                     if (!x.startsWith(config.ticketNumberPrefix)) {
@@ -125,8 +130,7 @@ export function createCommitMessage(config: Config): Promise<string> {
     ];
 
     return inquirer.prompt(questions).then(answers => {
-        console.log(answers);
-        return '';
+        return answers as Message;
     });
 }
 

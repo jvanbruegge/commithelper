@@ -4,6 +4,7 @@ import { resolve } from 'path';
 
 import { parseConfig } from './config';
 import { createCommitMessage } from './prompt';
+import { renderMessage } from './message';
 
 const program = new Command();
 
@@ -37,7 +38,11 @@ function lintMessage(commitMsg: string): void {
 function runInteractive(): void {
     const options = program.opts();
     const config = parseConfig(options.config);
-    const msg = createCommitMessage(config);
+
+    createCommitMessage(config).then(msg => {
+        const rendered = renderMessage(msg, config);
+        console.log(rendered);
+    });
 }
 
 program.parse(process.argv);
