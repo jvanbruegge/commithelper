@@ -3,6 +3,7 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
 import { parseConfig } from './config';
+import { createCommitMessage } from './prompt';
 
 const program = new Command();
 
@@ -36,8 +37,7 @@ function lintMessage(commitMsg: string): void {
 function runInteractive(): void {
     const options = program.opts();
     const config = parseConfig(options.config);
-    console.log(options);
-    console.log(config);
+    const msg = createCommitMessage(config);
 }
 
 program.parse(process.argv);
