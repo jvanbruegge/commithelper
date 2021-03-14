@@ -44,9 +44,16 @@
     },
     "github": {
       "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular",
+        "infile": "CHANGELOG.md"
+      }
     }
   },
   "devDependencies": {
+    "@release-it/conventional-changelog": "^2.0.1",
     "@types/inquirer": "^7.3.1",
     "@types/mocha": "^8.2.1",
     "@types/node": "^14.14.32",
