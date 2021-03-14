@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { Command, Option } from 'commander';
 import { readFileSync, writeFileSync, promises } from 'fs';
 import { resolve } from 'path';
