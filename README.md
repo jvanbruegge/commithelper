@@ -1,5 +1,7 @@
 # Commithelper
 
+[![Build](https://github.com/jvanbruegge/commithelper/actions/workflows/ci.yml/badge.svg)](https://github.com/jvanbruegge/commithelper/actions/workflows/ci.yml)
+
 A tool to create and lint commit messages. It has two modes `prompt` and `check`. The former asks you questions to create a well-formed commit message, while the latter lints a given commit message.
 
 ![A screenshot of a terminal showing the tool](./console.png)
