@@ -27,6 +27,23 @@ export function checkMessage(msg: Message, config: Config): void {
         );
     }
 
+    if (
+        msg.subject.charAt(0).toUpperCase() === msg.subject.charAt(0) &&
+        !config.upperCase
+    ) {
+        throw new Error(
+            `Expected first letter of the subject to be lower case, but got '${msg.subject}'`
+        );
+    }
+    if (
+        msg.subject.charAt(0).toLowerCase() === msg.subject.charAt(0) &&
+        config.upperCase
+    ) {
+        throw new Error(
+            `Expected first letter of the subject to be upperCase case, but got '${msg.subject}'`
+        );
+    }
+
     if (msg.body) {
         checkWrap(msg.body, config.bodyWrap);
     }
