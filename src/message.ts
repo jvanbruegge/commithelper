@@ -13,7 +13,7 @@ export function parseMessage(msg: string, config: Config): Message {
     const lines = msg.split('\n').filter(Boolean);
 
     const subjectLineRegex = new RegExp(
-        `^${escapeRegex(config.typePrefix)}(\\w+)${escapeRegex(
+        `^${escapeRegex(config.typePrefix)}([^()]+)${escapeRegex(
             config.typeSuffix
         )}(?:\\(([^()]+)\\))?: (.*)$`
     );
@@ -37,11 +37,13 @@ export function parseMessage(msg: string, config: Config): Message {
             continue;
         }
         if (lines[i].startsWith(config.ticketPrefix)) {
-            issuesClosed += lines[i]
-                .slice(config.ticketPrefix.length, lines[i].length)
-                .split(config.ticketSeperator)
-                .map(s => s.trim())
-                .join(config.ticketSeperator + ' ');
+            issuesClosed +=
+                (issuesClosed ? `${config.ticketSeperator} ` : '') +
+                lines[i]
+                    .slice(config.ticketPrefix.length, lines[i].length)
+                    .split(config.ticketSeperator)
+                    .map(s => s.trim())
+                    .join(config.ticketSeperator + ' ');
         } else if (lines[i].startsWith(config.breakingPrefix)) {
             isBody = false;
         } else if (isBody) {
