@@ -4,6 +4,13 @@ A tool to create and lint commit messages. It has two modes `prompt` and `check`
 
 ![A screenshot of a terminal showing the tool](./console.png)
 
+## Table of contents:
+
+-   [Usage](https://github.com/jvanbruegge/commithelper#usage)
+    -   [Setup with ghooks](https://github.com/jvanbruegge/commithelper#setup-with-ghooks)
+    -   [Setup with husky](https://github.com/jvanbruegge/commithelper#setup-with-husky)
+-   [Config File](https://github.com/jvanbruegge/commithelper#config-file)
+
 ## Usage
 
 First add `commithelper` as a dev dependency to your project with `npm install commithelper --save-dev`.
