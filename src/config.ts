@@ -55,7 +55,7 @@ export function getScopes(type: string, config: Config): string[] {
     return config.scopeOverrides[type] ?? config.scopes;
 }
 
-export function parseConfig(path: string | undefined): Config {
+export function parseConfigFile(path: string | undefined): Config {
     const json = path
         ? JSON.parse(readFileSync(path, { encoding: 'utf-8' }))
         : JSON.parse(
@@ -63,7 +63,11 @@ export function parseConfig(path: string | undefined): Config {
                   encoding: 'utf-8',
               })
           ).commithelper || {};
-    const parsed = Config.decode(json);
+    return parseConfig(json);
+}
+
+export function parseConfig(config: Partial<Config>): Config {
+    const parsed = Config.decode(config);
     const onLeft = (): never => {
         throw new Error(PathReporter.report(parsed).join('\n'));
     };

@@ -27,6 +27,8 @@
     "scopeOverrides": {
       "chore": [
         "tools",
+        "refactor",
+        "test",
         "deps",
         "docs",
         "examples"

@@ -2,7 +2,7 @@ import { Command, Option } from 'commander';
 import { readFileSync, writeFileSync, promises } from 'fs';
 import { resolve } from 'path';
 
-import { parseConfig } from './config';
+import { parseConfigFile } from './config';
 import { createCommitMessage } from './prompt';
 import { checkMessage } from './lint';
 import { renderMessage, parseMessage } from './message';
@@ -46,7 +46,7 @@ program
 
 function lintMessage(): void {
     const options = checkCommand.opts();
-    const config = parseConfig(options.config);
+    const config = parseConfigFile(options.config);
     const msg = readFileSync(options.file ?? process.stdin.fd, {
         encoding: 'utf-8',
     });
@@ -62,7 +62,7 @@ function lintMessage(): void {
 
 function runInteractive(): void {
     const options = promptCommand.opts();
-    const config = parseConfig(options.config);
+    const config = parseConfigFile(options.config);
 
     createCommitMessage(config)
         .then(msg => {
