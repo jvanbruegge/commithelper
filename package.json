@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "cross-env TS_NODE_PROJECT=\"test/tsconfig.json\" mocha -r ts-node/register test/*.ts",
+    "test": "cross-env TS_NODE_PROJECT=\"test/tsconfig.json\" nyc mocha -r ts-node/register test/*.ts",
     "format": "prettier --write ./src",
     "commit": "ts-node src/index.ts prompt",
     "prepare": "npm run build && husky install",
@@ -44,6 +44,7 @@
     "fast-check": "^2.13.0",
     "husky": "^5.1.3",
     "mocha": "^8.3.2",
+    "nyc": "^15.1.0",
     "prettier": "^2.2.1",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
