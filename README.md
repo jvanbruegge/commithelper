@@ -21,7 +21,7 @@ First add `commithelper` as a dev dependency to your project with `npm install c
 commithelper prompt [--file <path>] [--config <path>]
 ```
 
-Interactively asks the user questions to create a commit message. Use the `--file` option to specify a path to write the final message to. If omitted the message is printed to stdout. If the path already contains a file it is overwritten, but all comment lines (starting with `#`) are kept. Use the `--config` option to specify where to find the config file. If this is omitted, the config is read from the `commithelper` field in the `package.json`.
+Interactively asks the user questions to create a commit message. Use the `--file` option to specify a path to write the final message to. If omitted the message is printed to stdout. If the path already contains a file that only contains comments (lines starting with `#`) this file is overwritten, but all comment lines (starting with `#`) are kept. If the path contains a file with non-comment lines no questions are asked and program exits sucessful. This is useful when other tooling is creating the commit message or when using `git commit --amend`. Use the `--config` option to specify where to find the config file. If this is omitted, the config is read from the `commithelper` field in the `package.json`.
 
 ```
 commithelper check [--file <path>] [--fix] [--config <path>]
