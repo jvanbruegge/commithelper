@@ -4,6 +4,7 @@ import { resolve } from 'path';
 
 import { parseConfig } from './config';
 import { createCommitMessage } from './prompt';
+import { checkMessage } from './lint';
 import { renderMessage, parseMessage } from './message';
 
 const program = new Command();
@@ -49,7 +50,8 @@ function lintMessage(): void {
         encoding: 'utf-8',
     });
     const parsed = parseMessage(msg, config);
-    console.log(parsed);
+    checkMessage(parsed, config);
+    process.exitCode = 0;
 }
 
 function runInteractive(): void {

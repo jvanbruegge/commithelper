@@ -2,7 +2,7 @@ import * as inquirer from 'inquirer';
 import { QuestionCollection, Separator, Answers } from 'inquirer';
 import { green, red } from 'chalk';
 
-import { Config, ticketSeperatorRegex } from './config';
+import { Config, getScopes, ticketSeperatorRegex } from './config';
 import { Message } from './message';
 
 export function createCommitMessage(config: Config): Promise<Message> {
@@ -79,6 +79,7 @@ export function createCommitMessage(config: Config): Promise<Message> {
             choices: config.allowBreakingChanges,
             when: answers =>
                 answers.breaking !== '' &&
+                config.allowBreakingChanges.length > 0 &&
                 config.allowBreakingChanges.indexOf(answers.type) === -1,
         },
         {
@@ -148,11 +149,9 @@ function filterSubject(subject: string, upperCase: boolean): string {
 
 function getChoices(config: Config): (answers: Answers) => string[] {
     return ({ type }) =>
-        config.scopes
-            .concat(config.scopeOverrides[type] ?? [])
-            .concat(
-                config.allowCustomScopes
-                    ? [(new Separator() as unknown) as string, 'custom']
-                    : []
-            );
+        getScopes(type, config).concat(
+            config.allowCustomScopes
+                ? [(new Separator() as unknown) as string, 'custom']
+                : []
+        );
 }

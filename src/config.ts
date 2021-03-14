@@ -33,6 +33,10 @@ const Config = t.type({
 
 export type Config = t.TypeOf<typeof Config>;
 
+export function getScopes(type: string, config: Config): string[] {
+    return config.scopeOverrides[type] ?? config.scopes;
+}
+
 export function parseConfig(path: string | undefined): Config {
     const json = path
         ? JSON.parse(readFileSync(path, { encoding: 'utf-8' }))

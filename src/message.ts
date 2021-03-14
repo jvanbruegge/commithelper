@@ -22,7 +22,7 @@ export function parseMessage(msg: string, config: Config): Message {
     if (!matches) {
         throw new Error(
             `expected subject to either have form '${config.typePrefix}<type>${config.typeSuffix}: <subject>' ` +
-                `or form '${config.typeSuffix}<type>${config.typeSuffix}(<scope>): <subject>'`
+                `or form '${config.typeSuffix}<type>${config.typeSuffix}(<scope>): <subject>', got '${lines[0]}'`
         );
     }
 
@@ -42,9 +42,9 @@ export function parseMessage(msg: string, config: Config): Message {
         } else if (lines[i].startsWith(config.breakingPrefix)) {
             isBody = false;
         } else if (isBody) {
-            body += lines[i] + ' ';
+            body += lines[i] + '\n';
         } else {
-            breaking += lines[i] + ' ';
+            breaking += lines[i] + '\n';
         }
     }
 
