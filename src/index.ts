@@ -1,5 +1,5 @@
 import { Command, Option } from 'commander';
-import { readFileSync, promises } from 'fs';
+import { readFileSync, writeFileSync, promises } from 'fs';
 import { resolve } from 'path';
 
 import { parseConfig } from './config';
@@ -30,6 +30,7 @@ const checkCommand = new Command('check')
     .description('lint a commit message according to the configuration')
     .addOption(configOption)
     .addOption(fileOption)
+    .option('--fix', 'Try to fix the commit message to pass the linting')
     .action(lintMessage);
 
 const promptCommand = new Command('prompt')
@@ -50,7 +51,12 @@ function lintMessage(): void {
         encoding: 'utf-8',
     });
     const parsed = parseMessage(msg, config);
-    checkMessage(parsed, config);
+    const newMsg = checkMessage(parsed, config, options.fix);
+    if (newMsg) {
+        writeFileSync(options.file ?? process.stdout.fd, newMsg, {
+            encoding: 'utf-8',
+        });
+    }
     process.exitCode = 0;
 }
 

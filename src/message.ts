@@ -90,7 +90,7 @@ export function renderMessage(msg: Message, config: Config): string {
 }
 
 function renderBody(bodyMsg: string, config: Config): string {
-    const words = bodyMsg.split(/ /g).filter(Boolean);
+    const words = bodyMsg.split(/ |\\n/g).filter(Boolean);
 
     let lineLength = 0;
     let s = '';

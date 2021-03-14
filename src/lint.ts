@@ -1,7 +1,11 @@
 import { Config, getScopes, ticketSeperatorRegex } from './config';
-import { Message } from './message';
+import { Message, renderMessage } from './message';
 
-export function checkMessage(msg: Message, config: Config): void {
+export function checkMessage(
+    msg: Message,
+    config: Config,
+    fix: boolean
+): string | undefined {
     if (config.types.indexOf(msg.type) === -1) {
         throw new Error(
             `Expected 'type' to be one of '${config.types.join(', ')}', got '${
@@ -27,24 +31,32 @@ export function checkMessage(msg: Message, config: Config): void {
         );
     }
 
-    if (
-        msg.subject.charAt(0).toUpperCase() === msg.subject.charAt(0) &&
-        !config.upperCase
-    ) {
-        throw new Error(
-            `Expected first letter of the subject to be lower case, but got '${msg.subject}'`
-        );
-    }
-    if (
-        msg.subject.charAt(0).toLowerCase() === msg.subject.charAt(0) &&
-        config.upperCase
-    ) {
-        throw new Error(
-            `Expected first letter of the subject to be upperCase case, but got '${msg.subject}'`
-        );
+    if (fix) {
+        msg.subject =
+            (config.upperCase
+                ? msg.subject.charAt(0).toUpperCase()
+                : msg.subject.charAt(0).toLowerCase()) +
+            msg.subject.slice(1, msg.subject.length);
+    } else {
+        if (
+            msg.subject.charAt(0).toUpperCase() === msg.subject.charAt(0) &&
+            !config.upperCase
+        ) {
+            throw new Error(
+                `Expected first letter of the subject to be lower case, but got '${msg.subject}'`
+            );
+        }
+        if (
+            msg.subject.charAt(0).toLowerCase() === msg.subject.charAt(0) &&
+            config.upperCase
+        ) {
+            throw new Error(
+                `Expected first letter of the subject to be upperCase case, but got '${msg.subject}'`
+            );
+        }
     }
 
-    if (msg.body) {
+    if (!fix && msg.body) {
         checkWrap(msg.body, config.bodyWrap);
     }
     if (msg.breaking) {
@@ -58,7 +70,9 @@ export function checkMessage(msg: Message, config: Config): void {
                 )}', not for '${msg.type}'`
             );
         }
-        checkWrap(msg.breaking, config.bodyWrap);
+        if (!fix) {
+            checkWrap(msg.breaking, config.bodyWrap);
+        }
     }
 
     if (msg.issuesClosed) {
@@ -81,6 +95,8 @@ export function checkMessage(msg: Message, config: Config): void {
             }
         }
     }
+
+    return fix ? renderMessage(msg, config) : undefined;
 }
 
 function checkWrap(block: string, wrap: number) {
