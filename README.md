@@ -9,6 +9,10 @@ A tool to create and lint commit messages. It has two modes `prompt` and `check`
 ## Table of contents:
 
 -   [Usage](https://github.com/jvanbruegge/commithelper#usage)
+-   [Comparison with other tools](https://github.com/jvanbruegge/commithelper#comparison-with-other-tools)
+    -   [commitlint](https://github.com/jvanbruegge/commithelper#commitlint)
+    -   [commitizen](https://github.com/jvanbruegge/commithelper#commitizen)
+-   [Setup](https://github.com/jvanbruegge/commithelper#setup)
     -   [Setup with ghooks](https://github.com/jvanbruegge/commithelper#setup-with-ghooks)
     -   [Setup with husky](https://github.com/jvanbruegge/commithelper#setup-with-husky)
 -   [Config File](https://github.com/jvanbruegge/commithelper#config-file)
@@ -32,6 +36,22 @@ Lints a commit message according to the configuration. Use `--file` to specify w
 It is recommended to use [git hooks](https://git-scm.com/docs/githooks) with this tool. There are several npm packages that help you set up git hooks automatically, e.g. [husky](https://github.com/typicode/husky) or [ghooks](https://github.com/ghooks-org/ghooks).
 
 Use the `prepare-commit-msg` hook with the `prompt` mode to interactively create a commit message and use the `commit-msg` hook for the `check` mode.
+
+## Comparison with other tools
+
+### commitlint
+
+The [commitlint](https://github.com/conventional-changelog/commitlint) package and its plugins are only suited to check an existing commit message against a set of rules. While there is `@commitlint/prompt-cli`, it just states that the commits have to have the form `<type>(<scope>): <subject>` without telling you what the valid options are, so it is pretty useless.
+
+Also it is very complicated to configure as many rules available are barely documented at all.
+
+### commitizen
+
+The quesions in the `prompt` mode of `commithelper` is heavily inspired by [commitizen](https://github.com/commitizen/cz-cli). But commitizen can't lint an existing commit message, so if the user is using the git client built into their editor or provides the message with `git commit -m` commitizen can't help.
+
+Also, by default commitizen requires one of several adapters, each with their own configuration options which makes setting it up quite complicated.
+
+## Setup
 
 ### Setup with ghooks
 
