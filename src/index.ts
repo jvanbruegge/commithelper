@@ -64,18 +64,32 @@ function runInteractive(): void {
     const options = promptCommand.opts();
     const config = parseConfigFile(options.config);
 
+    const orig = options.file
+        ? readFileSync(options.file, { encoding: 'utf-8' })
+        : '';
+
+    if (
+        orig
+            .split('\n')
+            .filter(s => !s.startsWith('#'))
+            .join('\n')
+            .trim() !== ''
+    ) {
+        process.exitCode = 0;
+        return;
+    }
+
     createCommitMessage(config)
         .then(msg => {
             const rendered = renderMessage(msg, config);
             if (options.file) {
-                let orig = readFileSync(options.file, { encoding: 'utf-8' })
+                const comments = orig
                     .split('\n')
                     .filter(s => s.startsWith('#'))
                     .join('\n');
-
                 return promises.writeFile(
                     options.file,
-                    rendered + '\n\n' + orig,
+                    rendered + '\n\n' + comments,
                     {
                         encoding: 'utf-8',
                     }
