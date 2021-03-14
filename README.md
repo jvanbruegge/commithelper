@@ -92,7 +92,7 @@ You can either have a seperate json file and use the `--config` option to point 
 -   **subjectSeperator** _(string, default ':')_: The character to seperate `type` and `scope` from the subject. E.g. with '|' the message would look like `<type>(<scope>)| <subject>`. May not be the empty string.
 -   **typePrefix** _(string, default '')_: A string that is added before the `type`, e.g. with '[', the message would look like `[<type>(<scope>): <subject>`.
 -   **typeSuffix** _(string, default '')_: A string that is added after the `type`, e.g. with ']', the message would look like `<type>](<scope>): <subject>`.
--   **types** _({ name: string, message: string}, default names: ['feat', 'fix', 'release', 'chore'])_: All the commit types that are allowed for this repo. `name` is what will be at the place of `<type>` in the commit message, `message` is the explanation presented to the user during `prompt` mode.
+-   **types** _({ name: string, message: string}, default names: ['feat', 'fix', 'chore'])_: All the commit types that are allowed for this repo. `name` is what will be at the place of `<type>` in the commit message, `message` is the explanation presented to the user during `prompt` mode.
 -   **scopes** _(string array, default [])_: All the scopes that are allowed for all of the commit types.
 -   **scopeOverrides** _({ [type]: string array }, default {})_: Override the allowed scopes for a particular commit `type`. If this is set for a particular `type` the array defined here is used as allowed scopes instead of the array defined in the `scopes` option.
 -   **allowCustomScopes** _(boolean, default false)_: Set this to true if the user is allowed to write out a scope that is not on the list of allowed scopes.

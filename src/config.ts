@@ -21,7 +21,6 @@ export type Type = t.TypeOf<typeof Type>;
 const defaultTypes: Type[] = [
     { name: 'feat', message: 'A new feature' },
     { name: 'fix', message: 'A bug fix' },
-    { name: 'release', message: 'Release a new version of a package' },
     {
         name: 'chore',
         message:
