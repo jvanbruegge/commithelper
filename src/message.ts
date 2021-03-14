@@ -33,6 +33,9 @@ export function parseMessage(msg: string, config: Config): Message {
     let issuesClosed = '';
     let breaking = '';
     for (let i = 1; i < lines.length; i++) {
+        if (lines[i].startsWith('#')) {
+            continue;
+        }
         if (lines[i].startsWith(config.ticketPrefix)) {
             issuesClosed += lines[i]
                 .slice(config.ticketPrefix.length, lines[i].length)
