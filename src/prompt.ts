@@ -1,8 +1,13 @@
 import * as inquirer from 'inquirer';
-import { QuestionCollection, Separator, Answers } from 'inquirer';
+import {
+    QuestionCollection,
+    Separator,
+    Answers,
+    ChoiceCollection,
+} from 'inquirer';
 import { green, red } from 'chalk';
 
-import { Config, getScopes, ticketSeperatorRegex } from './config';
+import { Config, Type, getScopes, ticketSeperatorRegex } from './config';
 import { Message } from './message';
 
 export function createCommitMessage(config: Config): Promise<Message> {
@@ -11,7 +16,7 @@ export function createCommitMessage(config: Config): Promise<Message> {
             type: 'list',
             name: 'type',
             message: `Select the type of change that you're committing:`,
-            choices: config.types,
+            choices: getTypes(config.types),
         },
         {
             type: 'list',
@@ -154,4 +159,20 @@ function getChoices(config: Config): (answers: Answers) => string[] {
                 ? [(new Separator() as unknown) as string, 'custom']
                 : []
         );
+}
+
+function getTypes(types: Type[]): ChoiceCollection {
+    const maxLength: number = types.reduce((acc, curr) => {
+        const currLength = curr.name.length;
+        return acc >= currLength ? acc : currLength;
+    }, 0);
+
+    return types.map(({ name, message }) => ({
+        value: name,
+        name:
+            name +
+            (message ? ': ' : '') +
+            ' '.repeat(maxLength - name.length) +
+            message,
+    }));
 }

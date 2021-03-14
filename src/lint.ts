@@ -6,7 +6,7 @@ export function checkMessage(
     config: Config,
     fix: boolean
 ): string | undefined {
-    if (config.types.indexOf(msg.type) === -1) {
+    if (config.types.map(t => t.name).indexOf(msg.type) === -1) {
         throw new Error(
             `Expected 'type' to be one of '${config.types.join(', ')}', got '${
                 msg.type

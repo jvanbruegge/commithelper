@@ -11,12 +11,30 @@ const skippable = t.keyof({
     issuesClosed: null,
 });
 
+const Type = t.type({
+    name: t.string,
+    message: t.string,
+});
+
+export type Type = t.TypeOf<typeof Type>;
+
+const defaultTypes: Type[] = [
+    { name: 'feat', message: 'A new feature' },
+    { name: 'fix', message: 'A bug fix' },
+    { name: 'release', message: 'Release a new version of a package' },
+    {
+        name: 'chore',
+        message:
+            'Changes internal to the package, e.g. tooling, documentation, examples etc',
+    },
+];
+
 const Config = t.type({
     subjectLimit: withDefault(t.number, 100),
     subjectSeperator: withDefault(t.string, ':'),
     typePrefix: withDefault(t.string, ''),
     typeSuffix: withDefault(t.string, ''),
-    types: withDefault(t.array(t.string), ['feat', 'fix', 'release', 'chore']),
+    types: withDefault(t.array(Type), defaultTypes),
     scopes: withDefault(t.array(t.string), []),
     scopeOverrides: withDefault(t.record(t.string, t.array(t.string)), {}),
     allowCustomScopes: withDefault(t.boolean, false),
