@@ -9,6 +9,8 @@
   ],
   "author": "Jan van Brügge",
   "license": "MIT",
+  "repository": "https://github.com/jvanbruegge/commithelper",
+  "bugs": "https://github.com/jvanbruegge/commithelper/issues",
   "bin": {
     "commithelper": "build/index.js"
   },
