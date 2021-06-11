@@ -1,3 +1,16 @@
+# [1.2.0](https://github.com/jvanbruegge/commithelper/compare/1.1.1...1.2.0) (2021-06-11)
+
+
+### Bug Fixes
+
+* do not skip custom scope question ([a879f50](https://github.com/jvanbruegge/commithelper/commit/a879f5085ed1561dd54d7af991e762cb0c00331f)), closes [#3](https://github.com/jvanbruegge/commithelper/issues/3)
+* make breaking change question not swallow whitespace ([cfb5c04](https://github.com/jvanbruegge/commithelper/commit/cfb5c04f2e7c160e3fcbc1bd8bd62ae36cbfdf6c))
+
+
+### Features
+
+* allow to specify a message for scopes ([9550c42](https://github.com/jvanbruegge/commithelper/commit/9550c4240ae46ee06212b55df3208ff64e2cfc16)), closes [#2](https://github.com/jvanbruegge/commithelper/issues/2)
+
 ## [1.1.1](https://github.com/jvanbruegge/commithelper/compare/1.1.0...1.1.1) (2021-03-14)
 
 

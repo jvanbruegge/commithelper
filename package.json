@@ -1,6 +1,6 @@
 {
   "name": "commithelper",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A tool to create and lint commit messages",
   "keywords": [
     "commit",
@@ -29,12 +29,30 @@
   "commithelper": {
     "scopeOverrides": {
       "chore": [
-        { "name": "tools", "message": "Changes to tooling like CI or linters" },
-        { "name": "refactor", "message": "Changes to the code that have do not change the interface" },
-        { "name": "release", "message": "Release a new version, use npm run release for this" },
-        { "name": "test", "message": "Add new or update the tests" },
-        { "name": "deps", "message": "Changes in the dependencies, e.g. version bumps" },
-        { "name": "docs", "message": "Add more documentation" }
+        {
+          "name": "tools",
+          "message": "Changes to tooling like CI or linters"
+        },
+        {
+          "name": "refactor",
+          "message": "Changes to the code that have do not change the interface"
+        },
+        {
+          "name": "release",
+          "message": "Release a new version, use npm run release for this"
+        },
+        {
+          "name": "test",
+          "message": "Add new or update the tests"
+        },
+        {
+          "name": "deps",
+          "message": "Changes in the dependencies, e.g. version bumps"
+        },
+        {
+          "name": "docs",
+          "message": "Add more documentation"
+        }
       ]
     }
   },
