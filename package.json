@@ -19,9 +19,8 @@
     "test": "cross-env TS_NODE_PROJECT=\"test/tsconfig.json\" nyc mocha -r ts-node/register test/*.ts",
     "format": "prettier --write ./src",
     "commit": "ts-node src/index.ts prompt",
-    "release": "release-it",
-    "prepare": "npm run build && husky install",
-    "prepublishOnly": "npm run build"
+    "release": "npm run build && npm test && release-it",
+    "prepare": "npm run build && husky install"
   },
   "prettier": {
     "singleQuote": true,
@@ -32,7 +31,7 @@
       "chore": [
         { "name": "tools", "message": "Changes to tooling like CI or linters" },
         { "name": "refactor", "message": "Changes to the code that have do not change the interface" },
-        { "name": "release", "message": "Release a new version, use pnpm run release for this" },
+        { "name": "release", "message": "Release a new version, use npm run release for this" },
         { "name": "test", "message": "Add new or update the tests" },
         { "name": "deps", "message": "Changes in the dependencies, e.g. version bumps" },
         { "name": "docs", "message": "Add more documentation" }
