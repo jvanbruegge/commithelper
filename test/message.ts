@@ -48,7 +48,9 @@ describe('message tests', () => {
 
                 const newMessage = {
                     ...message,
-                    body: message.body ? message.body.trim() : '',
+                    body: message.body
+                        ? message.body.trim().split(/ +/g).join(' ')
+                        : '',
                     breaking: message.breaking ? message.breaking.trim() : '',
                     issuesClosed: message.issuesClosed
                         ? message.issuesClosed.trim()
