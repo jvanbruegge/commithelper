@@ -28,6 +28,7 @@ export function createCommitMessage(config: Config): Promise<Message> {
         {
             type: 'input',
             name: 'scope',
+            askAnswered: true,
             message: 'Enter a custom scope:',
             when: answers => answers.scope === 'custom',
         },
@@ -129,9 +130,7 @@ export function createCommitMessage(config: Config): Promise<Message> {
         },
     ];
 
-    return inquirer.prompt(questions).then(answers => {
-        return answers as Message;
-    });
+    return inquirer.prompt(questions).then(answers => answers as Message);
 }
 
 function maxSubjectLength(answers: Answers, subjectLimit: number): number {
