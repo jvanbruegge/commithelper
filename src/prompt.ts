@@ -80,7 +80,7 @@ export function createCommitMessage(config: Config): Promise<Message> {
             name: 'breaking',
             message: 'List any BREAKING CHANGES: (press enter to skip)\n',
             when: config.skipQuestions.indexOf('breaking') === -1,
-            transformer: s => s.trim(),
+            filter: s => s.trim(),
         },
 
         {
