@@ -11,12 +11,22 @@ const skippable = t.keyof({
     issuesClosed: null,
 });
 
-const Type = t.type({
-    name: t.string,
-    message: t.string,
-});
+const Type = t.union([
+    t.type({
+        name: t.string,
+        message: t.string,
+    }),
+    t.string,
+]);
 
 export type Type = t.TypeOf<typeof Type>;
+
+export function getName(t: Type): string {
+    return typeof t === 'string' ? t : t.name;
+}
+export function getMessage(t: Type): string {
+    return typeof t === 'string' ? '' : t.message;
+}
 
 const defaultTypes: Type[] = [
     { name: 'feat', message: 'A new feature' },
@@ -34,8 +44,8 @@ const Config = t.type({
     typePrefix: withDefault(t.string, ''),
     typeSuffix: withDefault(t.string, ''),
     types: withDefault(t.array(Type), defaultTypes),
-    scopes: withDefault(t.array(t.string), []),
-    scopeOverrides: withDefault(t.record(t.string, t.array(t.string)), {}),
+    scopes: withDefault(t.array(Type), []),
+    scopeOverrides: withDefault(t.record(t.string, t.array(Type)), {}),
     allowCustomScopes: withDefault(t.boolean, false),
     bodyWrap: withDefault(t.number, 72),
     ticketPrefix: withDefault(t.string, 'ISSUES CLOSED:'),
@@ -50,7 +60,7 @@ const Config = t.type({
 
 export type Config = t.TypeOf<typeof Config>;
 
-export function getScopes(type: string, config: Config): string[] {
+export function getScopes(type: string, config: Config): Type[] {
     return config.scopeOverrides[type] ?? config.scopes;
 }
 

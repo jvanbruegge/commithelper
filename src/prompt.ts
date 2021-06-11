@@ -7,7 +7,14 @@ import {
 } from 'inquirer';
 import { green, red } from 'chalk';
 
-import { Config, Type, getScopes, ticketSeperatorRegex } from './config';
+import {
+    Config,
+    Type,
+    getScopes,
+    ticketSeperatorRegex,
+    getMessage,
+    getName,
+} from './config';
 import { Message } from './message';
 
 export function createCommitMessage(config: Config): Promise<Message> {
@@ -151,27 +158,36 @@ function filterSubject(subject: string, upperCase: boolean): string {
     return x;
 }
 
-function getChoices(config: Config): (answers: Answers) => string[] {
-    return ({ type }) =>
-        getScopes(type, config).concat(
+function getChoices(config: Config): (answers: Answers) => ChoiceCollection {
+    return ({ type }) => {
+        const scopes = getScopes(type, config);
+        return getTypes(scopes).concat(
             config.allowCustomScopes
                 ? [(new Separator() as unknown) as string, 'custom']
                 : []
         );
+    };
 }
 
 function getTypes(types: Type[]): ChoiceCollection {
-    const maxLength: number = types.reduce((acc, curr) => {
-        const currLength = curr.name.length;
+    const maxLength = getMaxNameLength(types);
+    return types.map(t => {
+        const name = getName(t);
+        const message = getMessage(t);
+        return {
+            value: name,
+            name:
+                name +
+                (message ? ': ' : '') +
+                ' '.repeat(maxLength - name.length) +
+                message,
+        };
+    });
+}
+
+function getMaxNameLength(types: Type[]): number {
+    return types.reduce((acc, curr) => {
+        const currLength = getName(curr).length;
         return acc >= currLength ? acc : currLength;
     }, 0);
-
-    return types.map(({ name, message }) => ({
-        value: name,
-        name:
-            name +
-            (message ? ': ' : '') +
-            ' '.repeat(maxLength - name.length) +
-            message,
-    }));
 }

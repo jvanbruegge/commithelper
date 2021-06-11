@@ -30,13 +30,12 @@
   "commithelper": {
     "scopeOverrides": {
       "chore": [
-        "tools",
-        "refactor",
-        "release",
-        "test",
-        "deps",
-        "docs",
-        "examples"
+        { "name": "tools", "message": "Changes to tooling like CI or linters" },
+        { "name": "refactor", "message": "Changes to the code that have do not change the interface" },
+        { "name": "release", "message": "Release a new version, use pnpm run release for this" },
+        { "name": "test", "message": "Add new or update the tests" },
+        { "name": "deps", "message": "Changes in the dependencies, e.g. version bumps" },
+        { "name": "docs", "message": "Add more documentation" }
       ]
     }
   },

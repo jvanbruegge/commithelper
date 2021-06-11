@@ -1,4 +1,4 @@
-import { Config, getScopes, ticketSeperatorRegex } from './config';
+import { Config, getScopes, ticketSeperatorRegex, getName } from './config';
 import { Message, renderMessage } from './message';
 
 export function checkMessage(
@@ -6,7 +6,7 @@ export function checkMessage(
     config: Config,
     fix: boolean
 ): string | undefined {
-    if (config.types.map(t => t.name).indexOf(msg.type) === -1) {
+    if (config.types.map(getName).indexOf(msg.type) === -1) {
         throw new Error(
             `Expected 'type' to be one of '${config.types.join(', ')}', got '${
                 msg.type
@@ -14,7 +14,7 @@ export function checkMessage(
         );
     }
 
-    const allowedScopes = getScopes(msg.type, config);
+    const allowedScopes: string[] = getScopes(msg.type, config).map(getName);
     if (allowedScopes.length > 0 && !msg.scope) {
         throw new Error('Expected a scope, but got none');
     }
@@ -22,7 +22,7 @@ export function checkMessage(
     if (
         msg.scope &&
         !config.allowCustomScopes &&
-        allowedScopes.indexOf(msg.scope) === -1
+        allowedScopes.indexOf(getName(msg.scope)) === -1
     ) {
         throw new Error(
             `Expected 'scope' to be one of '${allowedScopes.join(
